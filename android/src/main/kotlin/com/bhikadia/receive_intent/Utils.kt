@@ -52,7 +52,19 @@ fun bundleToJSON(bundle: Bundle): JSONObject {
     while (iterator.hasNext()) {
         val key = iterator.next()
         try {
-            json.put(key, wrap(bundle.get(key)))
+            bundle.get(key).let {
+                if(it is ArrayList<*>) {
+                    it.forEach {
+                        if(it is Bundle) {
+                            json.put(key, bundleToJSON(it))
+                        } else {
+                            json.put(key, wrap(it))
+                        }
+                    }
+                } else {
+                    json.put(key, wrap(it))
+                }
+            }
         } catch (e: JSONException) {
             e.printStackTrace()
         }
