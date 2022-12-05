@@ -91,6 +91,9 @@ fun wrap(o: Any?): Any? {
             return JSONArray(o as Collection<*>?)
         } else if (o.javaClass.isArray) {
             //Log.e("ReceiveIntentPlugin", "$o is isArray")
+            if(o is ByteArray) {
+                return o.joinToString(separator = "") { eachByte -> "%02x".format(eachByte).toUpperCase() }
+            }
             return toJSONArray(o)
         }
         if (o is Map<*, *>) {
